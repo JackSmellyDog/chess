@@ -3,6 +3,7 @@ package me.shaposhnikandrii.chess.model.entity;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
+import me.shaposhnikandrii.chess.model.Board;
 import me.shaposhnikandrii.chess.model.enums.GameStatus;
 
 import javax.persistence.*;
@@ -17,6 +18,9 @@ import java.util.List;
 public class Game {
   @Id
   private Long id;
+
+  @Transient
+  private Board board;
 
   @Column
   @Enumerated(EnumType.STRING)
