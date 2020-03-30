@@ -1,6 +1,5 @@
 package me.shaposhnikandrii.chess.service;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.shaposhnikandrii.chess.model.Board;
 import me.shaposhnikandrii.chess.model.entity.Game;
@@ -13,11 +12,16 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Service
-@RequiredArgsConstructor
 public class GameService {
   private final GameRepository gameRepository;
   private final ConcurrentHashMap<Long, Game> activeGames;
   private final ObjectProvider<Board> startGameBoardProvider;
+
+  public GameService(GameRepository gameRepository, ObjectProvider<Board> startGameBoardProvider) {
+    this.gameRepository = gameRepository;
+    this.activeGames = new ConcurrentHashMap<>();
+    this.startGameBoardProvider = startGameBoardProvider;
+  }
 
 
   public Long startGame() {

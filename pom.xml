@@ -65,6 +65,32 @@
         </dependency>
     </dependencies>
 
+    <profiles>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <env>prod</env>
+                <dbUrl>jdbc:postgresql://localhost:5432/chess_db</dbUrl>
+                <dbUser>postgres</dbUser>
+                <dbPasswd>***********</dbPasswd>
+                <devTools>false</devTools>
+            </properties>
+        </profile>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>dev</env>
+                <dbUrl>jdbc:postgresql://localhost:5432/chess_db?reWriteBatchedInserts=true</dbUrl>
+                <dbUser>postgres</dbUser>
+                <dbPasswd>postgres</dbPasswd>
+                <devTools>true</devTools>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+    </profiles>
+
     <build>
         <plugins>
             <plugin>

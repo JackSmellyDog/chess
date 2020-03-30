@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -19,21 +16,25 @@ public class Move {
   @Id
   private Long id;
 
-  @Column(name = "move_number")
-  private Integer moveNumber;
+  @Column(name = "game_move_number")
+  private Integer gameMoveNumber;
 
   @NotNull
-  @Column(name = "to", length = 8)
-  private String to;
+  @Column(name = "move_to", length = 8)
+  private String moveTo;
 
   @NotNull
-  @Column(name = "from", length = 8)
-  private String from;
+  @Column(name = "previous_position", length = 8)
+  private String previousPosition;
 
   @NotNull
+  @ManyToOne
+  @JoinColumn(name = "game_id")
   private Game game;
 
   @NotNull
+  @OneToOne
+  @JoinColumn(name = "player_id")
   private Player player;
 
 }

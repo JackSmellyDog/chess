@@ -27,10 +27,15 @@ public class Game {
   private GameStatus gameStatus;
 
   @NotNull
+  @OneToOne
+  @JoinColumn(name = "white_player_id")
   private Player white;
 
   @NotNull
+  @OneToOne
+  @JoinColumn(name = "black_player_id")
   private Player black;
 
+  @OneToMany(mappedBy = "game")
   private List<Move> moves;
 }
