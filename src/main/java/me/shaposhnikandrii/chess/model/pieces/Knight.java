@@ -3,6 +3,9 @@ package me.shaposhnikandrii.chess.model.pieces;
 import me.shaposhnikandrii.chess.model.enums.Color;
 
 public class Knight extends Piece {
+  public static final char WHITE_UNICODE_SYMBOL = '\u2658';
+  public static final char BLACK_UNICODE_SYMBOL = '\u265E';
+
   public static final String SHORT_NAME = "N";
 
   public static final String START_POSITION_B1 = "b1";

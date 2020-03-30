@@ -3,6 +3,9 @@ package me.shaposhnikandrii.chess.model.pieces;
 import me.shaposhnikandrii.chess.model.enums.Color;
 
 public class Rook extends Piece {
+  public static final char WHITE_UNICODE_SYMBOL = '\u2656';
+  public static final char BLACK_UNICODE_SYMBOL = '\u265C';
+
   public static final String SHORT_NAME = "R";
 
   public static final String START_POSITION_A1 = "a1";

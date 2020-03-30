@@ -3,6 +3,9 @@ package me.shaposhnikandrii.chess.model.pieces;
 import me.shaposhnikandrii.chess.model.enums.Color;
 
 public class Bishop extends Piece {
+  public static final char WHITE_UNICODE_SYMBOL = '\u2657';
+  public static final char BLACK_UNICODE_SYMBOL = '\u265D';
+
   public static final String SHORT_NAME = "B";
 
   public static final String START_POSITION_C1 = "c1";
