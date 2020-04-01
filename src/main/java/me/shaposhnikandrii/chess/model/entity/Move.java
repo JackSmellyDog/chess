@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 @Entity
 public class Move {
   @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE)
   private Long id;
 
   @Column(name = "game_move_number")

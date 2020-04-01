@@ -13,7 +13,12 @@ public class Pawn extends Piece {
   }
 
   @Override
-  protected boolean isMoveValid() {
+  public char getUnicodeSymbol() {
+    return color == Color.WHITE ? WHITE_UNICODE_SYMBOL : BLACK_UNICODE_SYMBOL;
+  }
+
+  @Override
+  public boolean isMoveValid() {
     return false;
   }
 }

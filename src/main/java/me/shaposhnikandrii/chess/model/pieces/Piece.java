@@ -28,5 +28,7 @@ public abstract class Piece {
     }
   }
 
-  protected abstract boolean isMoveValid();
+  public abstract char getUnicodeSymbol();
+
+  public abstract boolean isMoveValid();
 }

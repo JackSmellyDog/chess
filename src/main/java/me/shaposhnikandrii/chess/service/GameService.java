@@ -2,8 +2,11 @@ package me.shaposhnikandrii.chess.service;
 
 import lombok.extern.slf4j.Slf4j;
 import me.shaposhnikandrii.chess.model.Board;
+import me.shaposhnikandrii.chess.model.dto.GameSettings;
 import me.shaposhnikandrii.chess.model.entity.Game;
 import me.shaposhnikandrii.chess.model.entity.Move;
+import me.shaposhnikandrii.chess.model.entity.Player;
+import me.shaposhnikandrii.chess.model.enums.GameStatus;
 import me.shaposhnikandrii.chess.repository.GameRepository;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
@@ -24,14 +27,22 @@ public class GameService {
   }
 
 
-  public Long startGame() {
-    Board board = startGameBoardProvider.getObject();
+  public Game startGame(Player white, Player black, GameSettings gameSettings) {
+    final Board board = startGameBoardProvider.getObject();
 
-    // game id
-    return 0L;
+    final Game game = new Game()
+        .setGameStatus(GameStatus.ACTIVE)
+        .setBoard(board)
+        .setWhite(white)
+        .setBlack(black);
+
+    save(game);
+    activeGames.put(game.getId(), game);
+
+    return game;
   }
 
-  public void makeMove(Move move) {
+  public void makeMove(Long gameId, Move move) {
 
   }
 

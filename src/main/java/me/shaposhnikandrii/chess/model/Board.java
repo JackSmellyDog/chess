@@ -12,6 +12,7 @@ import java.util.Optional;
 @Slf4j
 @Getter
 public class Board {
+  // change on Map<String, Piece> ???
   private final List<Piece> pieces;
 
 
@@ -46,6 +47,18 @@ public class Board {
     return this;
   }
 
+  public char getPieceUnicodeOnPosition(String position) {
+    if (position == null || !position.matches("[a-h][1-8]"))
+      return '.';
+
+    return pieces.stream()
+        .filter(piece -> position.equals(piece.getPosition()))
+        .findFirst()
+        .map(Piece::getUnicodeSymbol)
+        .orElse('.');
+
+  }
+
   public Board removePiece(String position) {
     Objects.requireNonNull(position);
 
@@ -58,7 +71,4 @@ public class Board {
   }
 
 
-  public void showBoard() {
-    pieces.forEach(piece -> log.info("{} {}{}", piece.getColor().name(), piece.getShortName(), piece.getPosition()));
-  }
 }
