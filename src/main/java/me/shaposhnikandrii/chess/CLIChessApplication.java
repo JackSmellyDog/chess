@@ -48,10 +48,9 @@ public class CLIChessApplication implements CommandLineRunner {
 
 
     while (!game.isOver()) {
-      log.info("One iteration");
       showScreen(board);
 
-      log.info("Enter your move:");
+      System.out.println("Enter your move:");
 
       String move = reader.readLine();
 
@@ -76,7 +75,7 @@ public class CLIChessApplication implements CommandLineRunner {
     }
 
     builder.append("  a b c d e f g h").append("\n\n\n");
-    log.info(builder.toString());
+    System.out.println(builder.toString());
   }
 
 

@@ -23,12 +23,12 @@ public abstract class Piece {
   }
 
   public void move(String position) {
-    if (isMoveValid()) {
+    if (isMovePossible(position)) {
       this.position = position;
     }
   }
 
   public abstract char getUnicodeSymbol();
 
-  public abstract boolean isMoveValid();
+  public abstract boolean isMovePossible(String position);
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import me.shaposhnikandrii.chess.model.Board;
+import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.GameStatus;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -56,8 +57,8 @@ public class Game {
     return move;
   }
 
-  public Player whoseTurn() {
-    return moves.size() % 2 == 0 ? white : black;
+  public Color whoseTurn() {
+    return moves.size() % 2 == 0 ? Color.WHITE : Color.BLACK;
   }
 
   public boolean isOver() {

@@ -22,7 +22,9 @@ public class King extends Piece {
   }
 
   @Override
-  public boolean isMoveValid() {
+  public boolean isMovePossible(String position) {
     return false;
   }
+
+
 }
