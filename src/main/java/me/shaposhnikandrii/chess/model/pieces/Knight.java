@@ -3,6 +3,8 @@ package me.shaposhnikandrii.chess.model.pieces;
 import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
 
+import java.util.EnumSet;
+
 public class Knight extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2658';
   public static final char BLACK_UNICODE_SYMBOL = '\u265E';
@@ -25,7 +27,28 @@ public class Knight extends Piece {
 
   @Override
   public boolean isMoveToPositionPossible(Square newPosition) {
-    return false;
+    final EnumSet<Square> possiblePositions = EnumSet.noneOf(Square.class);
+
+    final Square upTwo = position.up(2);
+    final Square downTwo = position.down(2);
+    final Square leftTwo = position.left(2);
+    final Square rightTwo = position.right(2);
+
+    possiblePositions.add(upTwo.left(1));
+    possiblePositions.add(upTwo.right(1));
+
+    possiblePositions.add(downTwo.left(1));
+    possiblePositions.add(downTwo.right(1));
+
+    possiblePositions.add(leftTwo.up(1));
+    possiblePositions.add(leftTwo.down(1));
+
+    possiblePositions.add(rightTwo.up(1));
+    possiblePositions.add(rightTwo.down(1));
+
+    possiblePositions.remove(Square.OUT_OF_BOARD);
+
+    return possiblePositions.contains(newPosition);
   }
 
 
