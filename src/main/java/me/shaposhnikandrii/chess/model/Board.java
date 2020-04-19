@@ -2,6 +2,7 @@ package me.shaposhnikandrii.chess.model;
 
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import me.shaposhnikandrii.chess.model.enums.Square;
 import me.shaposhnikandrii.chess.model.pieces.Piece;
 
 import java.util.ArrayList;
@@ -12,9 +13,7 @@ import java.util.Optional;
 @Slf4j
 @Getter
 public class Board {
-  // change on Map<String, Piece> ???
   private final List<Piece> pieces;
-
 
   public Board(List<Piece> pieces) {
     this.pieces = pieces;
@@ -25,12 +24,12 @@ public class Board {
   }
 
   public Board addPiece(Piece newPiece) {
-    final String position = Optional.ofNullable(newPiece)
+    final Square position = Optional.ofNullable(newPiece)
         .map(Piece::getPosition)
         .orElseThrow(RuntimeException::new);
 
     boolean isPositionTaken = pieces.stream()
-        .anyMatch(piece -> position.equals(piece.getPosition()));
+        .anyMatch(piece -> position == piece.getPosition());
 
     if (!isPositionTaken) {
       pieces.add(newPiece);
@@ -47,23 +46,19 @@ public class Board {
     return this;
   }
 
-  public char getPieceUnicodeOnPosition(String position) {
-    if (position == null || !position.matches("[a-h][1-8]"))
-      return '.';
-
+  public char getPieceUnicodeOnPosition(Square position) {
     return pieces.stream()
-        .filter(piece -> position.equals(piece.getPosition()))
+        .filter(piece -> position == piece.getPosition())
         .findFirst()
         .map(Piece::getUnicodeSymbol)
         .orElse('.');
-
   }
 
-  public Board removePiece(String position) {
+  public Board removePiece(Square position) {
     Objects.requireNonNull(position);
 
     pieces.stream()
-        .filter(piece -> position.equals(piece.getPosition()))
+        .filter(piece -> position == piece.getPosition())
         .findFirst()
         .ifPresentOrElse(pieces::remove, () -> log.warn("No piece found on ({})", position));
 

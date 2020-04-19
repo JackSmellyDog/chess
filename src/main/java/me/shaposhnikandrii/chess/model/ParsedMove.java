@@ -1,6 +1,7 @@
 package me.shaposhnikandrii.chess.model;
 
 import lombok.Getter;
+import me.shaposhnikandrii.chess.model.enums.Square;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +24,7 @@ public final class ParsedMove {
   private String error;
 
   private String pieceShortName;
-  private String afterMovePosition;
+  private Square afterMovePosition;
 
   // Not sure it's a correct word. Example: N(a)xb6, R(1)h7, Q(c3)c4
   private String elaboration;
@@ -55,9 +56,9 @@ public final class ParsedMove {
         return;
       }
 
-      afterMovePosition = m.group(NEW_POSITION_GROUP);
+      afterMovePosition = Square.of(m.group(NEW_POSITION_GROUP));
 
-      if (afterMovePosition == null) {
+      if (afterMovePosition == Square.OUT_OF_BOARD) {
         error = String.format("After move position can't be null. Plain move: (%s)", plainMove);
         return;
       }
@@ -82,7 +83,7 @@ public final class ParsedMove {
 
   private boolean isPawnNextToItsCapture() {
     // Move to Pawn's validation method?
-    return elaboration != null && !elaboration.isEmpty() && Math.abs(afterMovePosition.charAt(0) - elaboration.charAt(0)) == 1;
+    return elaboration != null && !elaboration.isEmpty() && Math.abs(afterMovePosition.getLetter() - elaboration.charAt(0)) == 1;
   }
 
 }

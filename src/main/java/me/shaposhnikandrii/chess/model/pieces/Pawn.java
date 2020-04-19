@@ -1,6 +1,7 @@
 package me.shaposhnikandrii.chess.model.pieces;
 
 import me.shaposhnikandrii.chess.model.enums.Color;
+import me.shaposhnikandrii.chess.model.enums.Square;
 
 public class Pawn extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2659';
@@ -8,7 +9,7 @@ public class Pawn extends Piece {
 
   public static final String SHORT_NAME = "";
 
-  public Pawn(Color color, String position) {
+  public Pawn(Color color, Square position) {
     super(SHORT_NAME, color, position);
   }
 
@@ -18,7 +19,7 @@ public class Pawn extends Piece {
   }
 
   @Override
-  public boolean isMovePossible(String position) {
+  public boolean isMoveToPositionPossible(Square newPosition) {
     return false;
   }
 

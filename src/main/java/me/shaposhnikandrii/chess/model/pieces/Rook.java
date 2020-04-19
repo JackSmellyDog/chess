@@ -1,6 +1,7 @@
 package me.shaposhnikandrii.chess.model.pieces;
 
 import me.shaposhnikandrii.chess.model.enums.Color;
+import me.shaposhnikandrii.chess.model.enums.Square;
 
 public class Rook extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2656';
@@ -8,12 +9,12 @@ public class Rook extends Piece {
 
   public static final String SHORT_NAME = "R";
 
-  public static final String START_POSITION_A1 = "a1";
-  public static final String START_POSITION_H1 = "h1";
-  public static final String START_POSITION_A8 = "a8";
-  public static final String START_POSITION_H8 = "h8";
+  public static final Square START_POSITION_A1 = Square.A1;
+  public static final Square START_POSITION_H1 = Square.H1;
+  public static final Square START_POSITION_A8 = Square.A8;
+  public static final Square START_POSITION_H8 = Square.H8;
 
-  public Rook(Color color, String position) {
+  public Rook(Color color, Square position) {
     super(SHORT_NAME, color, position);
   }
 
@@ -23,7 +24,7 @@ public class Rook extends Piece {
   }
 
   @Override
-  public boolean isMovePossible(String position) {
+  public boolean isMoveToPositionPossible(Square newPosition) {
     return false;
   }
 

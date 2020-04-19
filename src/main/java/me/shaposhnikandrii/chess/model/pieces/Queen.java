@@ -1,6 +1,7 @@
 package me.shaposhnikandrii.chess.model.pieces;
 
 import me.shaposhnikandrii.chess.model.enums.Color;
+import me.shaposhnikandrii.chess.model.enums.Square;
 
 public class Queen extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2655';
@@ -8,10 +9,10 @@ public class Queen extends Piece {
 
   public static final String SHORT_NAME = "Q";
 
-  public static final String START_POSITION_D1 = "d1";
-  public static final String START_POSITION_D8 = "d8";
+  public static final Square START_POSITION_D1 = Square.D1;
+  public static final Square START_POSITION_D8 = Square.D8;
 
-  public Queen(Color color, String position) {
+  public Queen(Color color, Square position) {
     super(SHORT_NAME, color, position);
   }
 
@@ -21,7 +22,7 @@ public class Queen extends Piece {
   }
 
   @Override
-  public boolean isMovePossible(String position) {
+  public boolean isMoveToPositionPossible(Square newPosition) {
     return false;
   }
 

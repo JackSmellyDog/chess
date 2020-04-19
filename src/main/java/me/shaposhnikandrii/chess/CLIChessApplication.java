@@ -7,6 +7,7 @@ import me.shaposhnikandrii.chess.model.dto.GameSettings;
 import me.shaposhnikandrii.chess.model.entity.Game;
 import me.shaposhnikandrii.chess.model.entity.Player;
 import me.shaposhnikandrii.chess.model.enums.GameStatus;
+import me.shaposhnikandrii.chess.model.enums.Square;
 import me.shaposhnikandrii.chess.service.GameService;
 import me.shaposhnikandrii.chess.service.PlayerService;
 import org.springframework.boot.CommandLineRunner;
@@ -16,6 +17,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.EnumSet;
 
 @Slf4j
 @SpringBootApplication
@@ -64,14 +66,20 @@ public class CLIChessApplication implements CommandLineRunner {
   private void showScreen(Board board) {
     StringBuilder builder = new StringBuilder("\n\n\n");
 
-    for (int i = 8; i >= 1; i--) {
-      builder.append(i).append(' ');
+    int newColumnCounter = 0;
 
-      for (int j = 'a'; j <= 'h'; j++) {
-        builder.append(board.getPieceUnicodeOnPosition(String.format("%s%s", (char) j, i))).append(' ');
+    for (Square square : EnumSet.range(Square.A8, Square.H1)) {
+      if (newColumnCounter % 8 == 0) {
+        builder.append(square.getNumber()).append(' ');
       }
 
-      builder.append('\n');
+      builder.append(board.getPieceUnicodeOnPosition(square)).append(' ');
+
+      if (newColumnCounter % 8 == 7) {
+        builder.append('\n');
+      }
+
+      newColumnCounter++;
     }
 
     builder.append("  a b c d e f g h").append("\n\n\n");

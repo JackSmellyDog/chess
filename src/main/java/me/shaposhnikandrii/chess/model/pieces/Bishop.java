@@ -1,6 +1,7 @@
 package me.shaposhnikandrii.chess.model.pieces;
 
 import me.shaposhnikandrii.chess.model.enums.Color;
+import me.shaposhnikandrii.chess.model.enums.Square;
 
 public class Bishop extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2657';
@@ -8,12 +9,12 @@ public class Bishop extends Piece {
 
   public static final String SHORT_NAME = "B";
 
-  public static final String START_POSITION_C1 = "c1";
-  public static final String START_POSITION_F1 = "f1";
-  public static final String START_POSITION_C8 = "c8";
-  public static final String START_POSITION_F8 = "f8";
+  public static final Square START_POSITION_C1 = Square.C1;
+  public static final Square START_POSITION_F1 = Square.F1;
+  public static final Square START_POSITION_C8 = Square.C8;
+  public static final Square START_POSITION_F8 = Square.F8;
 
-  public Bishop(Color color, String position) {
+  public Bishop(Color color, Square position) {
     super(SHORT_NAME, color, position);
   }
 
@@ -23,7 +24,7 @@ public class Bishop extends Piece {
   }
 
   @Override
-  public boolean isMovePossible(String position) {
+  public boolean isMoveToPositionPossible(Square newPosition) {
     return false;
   }
 

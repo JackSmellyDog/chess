@@ -2,12 +2,14 @@ package me.shaposhnikandrii.chess.config;
 
 import lombok.RequiredArgsConstructor;
 import me.shaposhnikandrii.chess.model.Board;
+import me.shaposhnikandrii.chess.model.enums.Square;
 import me.shaposhnikandrii.chess.model.pieces.*;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -25,12 +27,15 @@ public class AppConfig {
   @Bean
   @Scope(value = BeanDefinition.SCOPE_PROTOTYPE)
   public Board startGameBoard() {
-    List<Piece> whitePawns = IntStream.rangeClosed('a', 'h')
-        .mapToObj(c -> pieceFactory.createPawn(WHITE, String.format("%s2", (char) c)))
+
+    List<Piece> whitePawns = Arrays.stream(Square.values())
+        .filter(square -> square.getNumber() == '2')
+        .map(square -> pieceFactory.createPawn(WHITE, square))
         .collect(Collectors.toList());
 
-    List<Piece> blackPawns = IntStream.rangeClosed('a', 'h')
-        .mapToObj(c -> pieceFactory.createPawn(BLACK, String.format("%s7", (char) c)))
+    List<Piece> blackPawns = Arrays.stream(Square.values())
+        .filter(square -> square.getNumber() == '7')
+        .map(square -> pieceFactory.createPawn(WHITE, square))
         .collect(Collectors.toList());
 
 
