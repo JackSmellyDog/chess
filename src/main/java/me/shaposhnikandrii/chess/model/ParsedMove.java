@@ -3,6 +3,7 @@ package me.shaposhnikandrii.chess.model;
 import lombok.Getter;
 import me.shaposhnikandrii.chess.model.enums.Square;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -63,10 +64,10 @@ public final class ParsedMove {
         return;
       }
 
-      pieceShortName = m.group(PIECE_SHORT_NAME_GROUP);
+      pieceShortName = Optional.ofNullable(m.group(PIECE_SHORT_NAME_GROUP)).orElse("");
       elaboration = m.group(ELABORATION_GROUP);
 
-      isPawnMove = pieceShortName == null;
+      isPawnMove = pieceShortName.isEmpty();
       isCapturing = m.group(CAPTURING_GROUP) != null;
 
       if (isPawnMove && isCapturing && !isPawnNextToItsCapture()) {

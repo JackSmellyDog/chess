@@ -10,6 +10,7 @@ import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -44,7 +45,7 @@ public class Game {
   private Player black;
 
   @OneToMany(mappedBy = "game", cascade = CascadeType.ALL)
-  private List<Move> moves;
+  private List<Move> moves = new ArrayList<>();
 
   public Move getLastMove() {
     return lastMove;

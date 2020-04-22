@@ -1,17 +1,16 @@
 package me.shaposhnikandrii.chess.model;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
+import me.shaposhnikandrii.chess.model.pieces.King;
 import me.shaposhnikandrii.chess.model.pieces.Piece;
+import me.shaposhnikandrii.chess.util.CustomCollectors;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Slf4j
-@Getter
 public class Board {
   private final List<Piece> pieces;
 
@@ -54,15 +53,62 @@ public class Board {
         .orElse('.');
   }
 
-  public Board removePiece(Square position) {
+  private Map<Square, Color> getTakenPosition() {
+    return pieces.stream().collect(Collectors.toMap(Piece::getPosition, Piece::getColor));
+  }
+
+  public Optional<Piece> getPieceWhichCanMoveTo(Square position, Color color, String shortName, String elaboration) {
+    return pieces.stream()
+        .filter(piece -> piece.getColor() == color)
+        .filter(piece -> piece.getShortName().equals(shortName))
+        .filter(piece -> withElaboration(piece, elaboration))
+        .filter(piece -> piece.isMoveToPositionPossible(position, getTakenPosition()))
+        .collect(CustomCollectors.toSinglePieceOptional());
+  }
+
+  public Optional<Piece> getPieceWhichCanMoveTo(Square position, Color color, String shortName) {
+    return getPieceWhichCanMoveTo(position, color, shortName, null);
+  }
+
+  public Optional<Piece> getKing(Color color) {
+    return pieces.stream()
+        .filter(piece -> piece.getShortName().equals(King.SHORT_NAME))
+        .filter(piece -> piece.getColor() == color)
+        .collect(CustomCollectors.toSinglePieceOptional());
+  }
+
+  public Optional<Piece> getWhiteKing() {
+    return getKing(Color.WHITE);
+  }
+
+  public Optional<Piece> getBlackKing() {
+    return getKing(Color.BLACK);
+  }
+
+  private boolean withElaboration(Piece piece, String elaboration) {
+    if (elaboration == null || elaboration.isEmpty())
+      return true;
+
+    final Square position = piece.getPosition();
+
+    if (elaboration.length() == 1) {
+      return elaboration.charAt(0) == position.getLetter() || elaboration.charAt(0) == position.getNumber();
+
+    } else if (elaboration.length() == 2) {
+      return elaboration.equalsIgnoreCase(position.name());
+
+    } else {
+      log.warn("Invalid elaboration ({})", elaboration);
+      return false;
+    }
+  }
+
+  public Optional<Piece> removePiece(Square position) {
     Objects.requireNonNull(position);
 
-    pieces.stream()
+    return pieces.stream()
         .filter(piece -> position == piece.getPosition())
-        .findFirst()
-        .ifPresentOrElse(pieces::remove, () -> log.warn("No piece found on ({})", position));
-
-    return this;
+        .findFirst();
   }
 
 

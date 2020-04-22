@@ -4,9 +4,9 @@ import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
 
 import java.util.EnumSet;
-import java.util.function.UnaryOperator;
+import java.util.Map;
 
-public class Bishop extends Piece {
+public class Bishop extends LongRangePiece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2657';
   public static final char BLACK_UNICODE_SYMBOL = '\u265D';
 
@@ -27,27 +27,17 @@ public class Bishop extends Piece {
   }
 
   @Override
-  public boolean isMoveToPositionPossible(Square newPosition) {
+  public boolean isMoveToPositionPossible(Square newPosition, Map<Square, Color> takenPositions) {
     final EnumSet<Square> possiblePositions = EnumSet.noneOf(Square.class);
 
-    moveUntilPossible(possiblePositions, square -> square.up(1).right(1));
-    moveUntilPossible(possiblePositions, square -> square.up(1).left(1));
-    moveUntilPossible(possiblePositions, square -> square.down(1).right(1));
-    moveUntilPossible(possiblePositions, square -> square.down(1).left(1));
+    moveUntilPossible(possiblePositions, takenPositions, square -> square.up(1).right(1));
+    moveUntilPossible(possiblePositions, takenPositions, square -> square.up(1).left(1));
+    moveUntilPossible(possiblePositions, takenPositions, square -> square.down(1).right(1));
+    moveUntilPossible(possiblePositions, takenPositions, square -> square.down(1).left(1));
 
     possiblePositions.remove(Square.OUT_OF_BOARD);
 
     return possiblePositions.contains(newPosition);
   }
-
-  private void moveUntilPossible(EnumSet<Square> possiblePositions, UnaryOperator<Square> unaryOperator) {
-    Square candidate = unaryOperator.apply(position);
-
-    while (candidate != Square.OUT_OF_BOARD) {
-      possiblePositions.add(candidate);
-      candidate = unaryOperator.apply(candidate);
-    }
-  }
-
 
 }

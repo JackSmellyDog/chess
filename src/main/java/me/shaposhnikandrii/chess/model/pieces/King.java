@@ -4,6 +4,7 @@ import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 public class King extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2654';
@@ -25,7 +26,7 @@ public class King extends Piece {
   }
 
   @Override
-  public boolean isMoveToPositionPossible(Square newPosition) {
+  public boolean isMoveToPositionPossible(Square newPosition, Map<Square, Color> takenPositions) {
     final EnumSet<Square> possiblePositions = EnumSet.noneOf(Square.class);
 
     final Square upOne = position.up(1);
@@ -44,8 +45,13 @@ public class King extends Piece {
     possiblePositions.add(downOne.left(1));
     possiblePositions.add(downOne.right(1));
 
-
     possiblePositions.remove(Square.OUT_OF_BOARD);
+
+    takenPositions.entrySet().stream()
+        .filter(entry -> entry.getValue() == color)
+        .map(Map.Entry::getKey)
+        .forEach(possiblePositions::remove);
+
     return possiblePositions.contains(newPosition);
   }
 

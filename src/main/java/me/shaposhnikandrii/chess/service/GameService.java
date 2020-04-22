@@ -56,7 +56,12 @@ public class GameService {
       final Game game = Optional.ofNullable(activeGames.get(gameId)).orElseThrow(NoSuchGameException::new);
       final Board board = game.getBoard();
 
+      Piece pieceToMove =
+          board.getPieceWhichCanMoveTo(parsedMove.getAfterMovePosition(), game.whoseTurn(), parsedMove.getPieceShortName(), parsedMove.getElaboration())
+          .orElseThrow(RuntimeException::new);
 
+      pieceToMove.setPosition(parsedMove.getAfterMovePosition());
+      game.writeMoveDown(move);
 
     } else {
       throw new ImpossibleMoveException(parsedMove.getError());

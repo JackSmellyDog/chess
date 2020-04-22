@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Scope;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static me.shaposhnikandrii.chess.model.enums.Color.BLACK;
 import static me.shaposhnikandrii.chess.model.enums.Color.WHITE;
@@ -35,7 +34,7 @@ public class AppConfig {
 
     List<Piece> blackPawns = Arrays.stream(Square.values())
         .filter(square -> square.getNumber() == '7')
-        .map(square -> pieceFactory.createPawn(WHITE, square))
+        .map(square -> pieceFactory.createPawn(BLACK, square))
         .collect(Collectors.toList());
 
 
@@ -68,8 +67,6 @@ public class AppConfig {
         .addPiece(pieceFactory.createBishop(BLACK, Bishop.START_POSITION_F8))
         // black pawns
         .addPieces(blackPawns);
-
-
   }
 
 }

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import me.shaposhnikandrii.chess.model.Board;
 import me.shaposhnikandrii.chess.model.dto.GameSettings;
 import me.shaposhnikandrii.chess.model.entity.Game;
+import me.shaposhnikandrii.chess.model.entity.Move;
 import me.shaposhnikandrii.chess.model.entity.Player;
 import me.shaposhnikandrii.chess.model.enums.GameStatus;
 import me.shaposhnikandrii.chess.model.enums.Square;
@@ -46,18 +47,20 @@ public class CLIChessApplication implements CommandLineRunner {
     Game game = gameService.startGame(white, black, new GameSettings());
     Board board = game.getBoard();
 
-    BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+    try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
 
+      while (!game.isOver()) {
+        showScreen(board);
 
-    while (!game.isOver()) {
-      showScreen(board);
+        System.out.println("Enter your move:");
+        String move = reader.readLine().trim();
 
-      System.out.println("Enter your move:");
+        if (move.equalsIgnoreCase("Exit")) {
+          break;
+        }
 
-      String move = reader.readLine();
-
-
-      game.setGameStatus(GameStatus.DRAW);
+        gameService.makeMove(game.getId(), new Move().setMoveTo(move));
+      }
     }
 
   }

@@ -4,6 +4,7 @@ import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
 
 import java.util.EnumSet;
+import java.util.Map;
 
 public class Pawn extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2659';
@@ -21,30 +22,45 @@ public class Pawn extends Piece {
   }
 
   @Override
-  public boolean isMoveToPositionPossible(Square newPosition) {
+  public boolean isMoveToPositionPossible(Square newPosition, Map<Square, Color> takenPositions) {
     final EnumSet<Square> possiblePositions = EnumSet.noneOf(Square.class);
 
-    if (color == Color.WHITE) {
-      final Square upOne = position.up(1);
+    int onePoint = color == Color.WHITE ? 1 : -1;
+    int twoPoints = color == Color.WHITE ? 2 : -2;
+    char doubleJumpLine = color == Color.WHITE ? '2' : '7';
+    char passantLine = color == Color.WHITE ? '5' : '4';
 
+    final Square upOne = position.up(onePoint);
+    final Square upTwo = position.up(twoPoints);
+    final Square upAndLeft = upOne.left(1);
+    final Square upAndRight = upOne.right(1);
+
+    if (!takenPositions.containsKey(upOne)) {
       possiblePositions.add(upOne);
-      possiblePositions.add(upOne.left(1));
-      possiblePositions.add(upOne.right(1));
+    }
 
-      if (position.getNumber() == '2') {
-        possiblePositions.add(position.up(2));
-      }
+    if (takenPositions.containsKey(upAndLeft) && takenPositions.get(upAndLeft) != color) {
+      possiblePositions.add(upAndLeft);
+    }
 
-    } else {
-      final Square downOne = position.down(1);
+    final Square leftOne = position.left(1);
 
-      possiblePositions.add(downOne);
-      possiblePositions.add(downOne.left(1));
-      possiblePositions.add(downOne.right(1));
+    if (position.getNumber() == passantLine && takenPositions.containsKey(leftOne) && takenPositions.get(leftOne) != color) {
+      possiblePositions.add(upAndLeft);
+    }
 
-      if (position.getNumber() == '7') {
-        possiblePositions.add(position.down(2));
-      }
+    if (takenPositions.containsKey(upAndRight) && takenPositions.get(upAndRight) != color) {
+      possiblePositions.add(upAndRight);
+    }
+
+    final Square rightOne = position.right(1);
+
+    if (position.getNumber() == passantLine && takenPositions.containsKey(rightOne) && takenPositions.get(rightOne) != color) {
+      possiblePositions.add(rightOne);
+    }
+
+    if (position.getNumber() == doubleJumpLine && !takenPositions.containsKey(upTwo)) {
+      possiblePositions.add(upTwo);
     }
 
     possiblePositions.remove(Square.OUT_OF_BOARD);
