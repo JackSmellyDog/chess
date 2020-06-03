@@ -25,15 +25,18 @@ public final class ParsedMove {
   private String error;
 
   private String pieceShortName;
-  private Square afterMovePosition;
+  private Square newPosition;
 
   // Not sure it's a correct word. Example: N(a)xb6, R(1)h7, Q(c3)c4
   private String elaboration;
 
   private boolean isPawnMove;
+  private boolean isCapturing;
+
+  private boolean isCastling;
   private boolean isShortCastling;
   private boolean isLongCastling;
-  private boolean isCapturing;
+
 
   public static ParsedMove parse(String plainMove) {
     return new ParsedMove(plainMove);
@@ -53,13 +56,18 @@ public final class ParsedMove {
       isLongCastling = m.group(LONG_CASTLING_GROUP) != null;
 
       if (isShortCastling || isLongCastling) {
+        isCastling = true;
         isValid = true;
+
+        // Due to the rule that castling is a King's move
+        pieceShortName = "K";
+
         return;
       }
 
-      afterMovePosition = Square.of(m.group(NEW_POSITION_GROUP));
+      newPosition = Square.of(m.group(NEW_POSITION_GROUP));
 
-      if (afterMovePosition == Square.OUT_OF_BOARD) {
+      if (newPosition == Square.OUT_OF_BOARD) {
         error = String.format("After move position can't be null. Plain move: (%s)", plainMove);
         return;
       }
@@ -84,7 +92,7 @@ public final class ParsedMove {
 
   private boolean isPawnNextToItsCapture() {
     // Move to Pawn's validation method?
-    return elaboration != null && !elaboration.isEmpty() && Math.abs(afterMovePosition.getLetter() - elaboration.charAt(0)) == 1;
+    return elaboration != null && !elaboration.isEmpty() && Math.abs(newPosition.getLetter() - elaboration.charAt(0)) == 1;
   }
 
 }

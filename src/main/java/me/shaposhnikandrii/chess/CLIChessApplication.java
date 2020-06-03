@@ -7,7 +7,6 @@ import me.shaposhnikandrii.chess.model.dto.GameSettings;
 import me.shaposhnikandrii.chess.model.entity.Game;
 import me.shaposhnikandrii.chess.model.entity.Move;
 import me.shaposhnikandrii.chess.model.entity.Player;
-import me.shaposhnikandrii.chess.model.enums.GameStatus;
 import me.shaposhnikandrii.chess.model.enums.Square;
 import me.shaposhnikandrii.chess.service.GameService;
 import me.shaposhnikandrii.chess.service.PlayerService;
@@ -50,16 +49,20 @@ public class CLIChessApplication implements CommandLineRunner {
     try (BufferedReader reader = new BufferedReader(new InputStreamReader(System.in))) {
 
       while (!game.isOver()) {
-        showScreen(board);
+        try {
+          showScreen(board);
 
-        System.out.println("Enter your move:");
-        String move = reader.readLine().trim();
+          System.out.println("Enter your move:");
+          String move = reader.readLine().trim();
 
-        if (move.equalsIgnoreCase("Exit")) {
-          break;
+          if (move.equalsIgnoreCase("Exit")) {
+            break;
+          }
+
+          gameService.makeMove(game.getId(), new Move().setMoveTo(move));
+        } catch (Exception e) {
+          log.error("Error: ", e);
         }
-
-        gameService.makeMove(game.getId(), new Move().setMoveTo(move));
       }
     }
 

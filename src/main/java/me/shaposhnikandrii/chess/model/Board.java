@@ -1,6 +1,7 @@
 package me.shaposhnikandrii.chess.model;
 
 import lombok.extern.slf4j.Slf4j;
+import me.shaposhnikandrii.chess.exception.ImpossibleMoveException;
 import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
 import me.shaposhnikandrii.chess.model.pieces.King;
@@ -12,10 +13,12 @@ import java.util.stream.Collectors;
 
 @Slf4j
 public class Board {
-  private final List<Piece> pieces;
+  private final List<Piece> activePieces;
+  private final List<Piece> capturedPieces;
 
-  public Board(List<Piece> pieces) {
-    this.pieces = pieces;
+  public Board(List<Piece> activePieces) {
+    this.activePieces = activePieces;
+    this.capturedPieces = new ArrayList<>();
   }
 
   public Board() {
@@ -27,11 +30,11 @@ public class Board {
         .map(Piece::getPosition)
         .orElseThrow(RuntimeException::new);
 
-    boolean isPositionTaken = pieces.stream()
+    boolean isPositionTaken = activePieces.stream()
         .anyMatch(piece -> position == piece.getPosition());
 
     if (!isPositionTaken) {
-      pieces.add(newPiece);
+      activePieces.add(newPiece);
       log.info("{} has been added on {}", newPiece.getClass().getSimpleName(), newPiece.getPosition());
     } else {
       log.warn("Position ({}) is already taken", position);
@@ -46,19 +49,47 @@ public class Board {
   }
 
   public char getPieceUnicodeOnPosition(Square position) {
-    return pieces.stream()
-        .filter(piece -> position == piece.getPosition())
-        .findFirst()
+    return getPieceOnPosition(position)
         .map(Piece::getUnicodeSymbol)
         .orElse('.');
   }
 
+
+  public void updatePosition(Square newPosition, String pieceShortName, Color pieceColor, boolean isCapturing, String elaboration) {
+    final Piece pieceToMove = getPieceWhichCanMoveTo(newPosition, pieceColor, pieceShortName, elaboration)
+        .orElseThrow(() -> new ImpossibleMoveException("No or too many pieces on " + newPosition));
+
+    // todo: en passant
+    if (isCapturing) {
+      final Piece pieceToBeTaken = getPieceOnPosition(newPosition)
+          .orElseThrow(() -> new ImpossibleMoveException("No piece to be captured on " + newPosition));
+
+      if (pieceToMove.hasSameColorAs(pieceToBeTaken))
+        throw new ImpossibleMoveException("Your own piece can't be taken");
+
+      if (pieceToBeTaken instanceof King)
+        throw new ImpossibleMoveException("Kings can't be taken");
+
+      removePiece(pieceToBeTaken);
+    }
+
+    pieceToMove.setPosition(newPosition);
+  }
+
+  public void shortCastling(Color forColor) {
+
+  }
+
+  public void longCastling(Color forColor) {
+
+  }
+
   private Map<Square, Color> getTakenPosition() {
-    return pieces.stream().collect(Collectors.toMap(Piece::getPosition, Piece::getColor));
+    return activePieces.stream().collect(Collectors.toMap(Piece::getPosition, Piece::getColor));
   }
 
   public Optional<Piece> getPieceWhichCanMoveTo(Square position, Color color, String shortName, String elaboration) {
-    return pieces.stream()
+    return activePieces.stream()
         .filter(piece -> piece.getColor() == color)
         .filter(piece -> piece.getShortName().equals(shortName))
         .filter(piece -> withElaboration(piece, elaboration))
@@ -71,7 +102,7 @@ public class Board {
   }
 
   public Optional<Piece> getKing(Color color) {
-    return pieces.stream()
+    return activePieces.stream()
         .filter(piece -> piece.getShortName().equals(King.SHORT_NAME))
         .filter(piece -> piece.getColor() == color)
         .collect(CustomCollectors.toSinglePieceOptional());
@@ -103,13 +134,19 @@ public class Board {
     }
   }
 
-  public Optional<Piece> removePiece(Square position) {
-    Objects.requireNonNull(position);
+  public boolean removePiece(Piece piece) {
+    if (activePieces.remove(piece)) {
+      capturedPieces.add(piece);
+      return true;
+    }
 
-    return pieces.stream()
-        .filter(piece -> position == piece.getPosition())
-        .findFirst();
+    return false;
   }
 
 
+  public Optional<Piece> getPieceOnPosition(Square position) {
+    return activePieces.stream()
+        .filter(piece -> position == piece.getPosition())
+        .findFirst();
+  }
 }

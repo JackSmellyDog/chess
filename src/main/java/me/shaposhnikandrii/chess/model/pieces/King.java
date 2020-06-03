@@ -1,10 +1,11 @@
 package me.shaposhnikandrii.chess.model.pieces;
 
+import lombok.Getter;
+import lombok.Setter;
 import me.shaposhnikandrii.chess.model.enums.Color;
 import me.shaposhnikandrii.chess.model.enums.Square;
 
-import java.util.EnumSet;
-import java.util.Map;
+import java.util.*;
 
 public class King extends Piece {
   public static final char WHITE_UNICODE_SYMBOL = '\u2654';
@@ -14,6 +15,9 @@ public class King extends Piece {
 
   public static final Square START_POSITION_E1 = Square.E1;
   public static final Square START_POSITION_E8 = Square.E8;
+
+  @Getter @Setter
+  private boolean isUnderCheck;
 
 
   public King(Color color, Square position) {
@@ -55,5 +59,17 @@ public class King extends Piece {
     return possiblePositions.contains(newPosition);
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    if (!super.equals(o)) return false;
+    King king = (King) o;
+    return isUnderCheck == king.isUnderCheck;
+  }
 
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), isUnderCheck);
+  }
 }
