@@ -44,6 +44,7 @@ public final class ParsedMove {
 
   private ParsedMove(String plainMove) {
     this.plainMove = plainMove;
+    //todo: avoid logic in constructor
     init();
   }
 
